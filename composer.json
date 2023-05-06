@@ -1,0 +1,15 @@
+{
+    "name": "drhtoo/laravel-metafield",
+    "autoload": {
+        "psr-4": {
+            "Drhtoo\\MetaField\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "drhtoo",
+            "email": "drpyaesonehtoo@gmail.com"
+        }
+    ],
+    "require": {}
+}
