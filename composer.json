@@ -1,8 +1,10 @@
 {
     "name": "drhtoo/laravel-metafield",
+    "description": "Laravel MetaField",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Drhtoo\\MetaField\\": "src/"
+            "Drhtoo\\LaravelMetafield\\": "src/"
         }
     },
     "authors": [

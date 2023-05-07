@@ -1,6 +1,6 @@
 <?php 
 
-namespace Drhtoo\MetaField\Concerns;
+namespace Drhtoo\MetaField\Models\Concerns;
 
 use Drhtoo\MetaField\Models\Meta;
 use Exception;
