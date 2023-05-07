@@ -4,7 +4,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Drhtoo\\LaravelMetafield\\": "src/"
+            "Drhtoo\\Metafield\\": "src/"
         }
     },
     "authors": [
@@ -13,5 +13,13 @@
             "email": "drpyaesonehtoo@gmail.com"
         }
     ],
-    "require": {}
+    "require": {},
+    "minimum-stability": "dev",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Drhtoo\\Metafield\\LaravelMetaFieldServiceProvider"
+            ]
+        }
+    }
 }
