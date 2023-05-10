@@ -4,7 +4,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Drhtoo\\Metafield\\": "src/"
+            "Drhtoo\\MetaField\\": "src/"
         }
     },
     "authors": [
@@ -22,7 +22,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Drhtoo\\Metafield\\LaravelMetaFieldServiceProvider"
+                "Drhtoo\\MetaField\\LaravelMetaFieldServiceProvider"
             ]
         }
     },
