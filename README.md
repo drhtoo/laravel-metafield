@@ -4,15 +4,21 @@ The Laravel Metafield package allows you to add custom metafields to your Larave
 ## Installation
 To install the package, you can simply run the following Composer command:
 
-```composer require drhtoo/laravel-metafield```
+```
+composer require drhtoo/laravel-metafield
+```
 
 After you've installed the package, you'll need to publish the package's migrations to your Laravel application. You can do this by running the following command:
 
-```php artisan vendor:publish --tag=laravel-metafield-migrations```
+```
+php artisan vendor:publish --tag=laravel-metafield-migrations
+```
 
 Once the migrations have been published, you can run them by using the following command:
 
-```php artisan migrate```
+```
+php artisan migrate
+```
 
 ## Usage
 To start using the Laravel Metafield package, you'll need to add the HasMeta trait to any Eloquent models that you want to have metafields. Here's an example:
