@@ -8,10 +8,11 @@ To install the package, you can simply run the following Composer command:
 composer require drhtoo/laravel-metafield
 ```
 
-After you've installed the package, you'll need to publish the package's migrations to your Laravel application. You can do this by running the following command:
+### Publishing Config and Migration (Optional)
+After you've installed the package, you can optinally publish the package's config and migrations to your Laravel application. You can do this by running the following command:
 
 ```
-php artisan vendor:publish --tag=laravel-metafield-migrations
+php artisan vendor:publish --provider="Drhtoo\MetaField\LaravelMetaFieldServiceProvider"
 ```
 
 Once the migrations have been published, you can run them by using the following command:
@@ -24,6 +25,7 @@ php artisan migrate
 To start using the Laravel Metafield package, you'll need to add the HasMeta trait to any Eloquent models that you want to have metafields. Here's an example:
 
 ```
+// Product.php
 use Drhtoo\MetaField\Models\Concerns\HasMeta;
 
 class Product extends Model
@@ -46,6 +48,7 @@ echo $product->metas->price; // 100
 To use meta fields as a model attribute, you have to add ***$metaFields*** property to your model. It is a protected property of array type which is the default values keyed by the field/key.
 
 ```
+// Product.php
 use Drhtoo\MetaField\Models\Concerns\HasMeta;
 
 class Product extends Model
@@ -71,6 +74,7 @@ echo $product->price; // 100
 You can also cast the metafield as in attributes of Eloquent/Models.
 
 ```
+// Product.php
 use Drhtoo\MetaField\Models\Concerns\HasMeta;
 
 class Product extends Model
@@ -103,9 +107,31 @@ echo $product->price; // 100
 ```
 
 ### Working with Livewire Component
-This package is well compatible with Livewire component and directly bind to wire:model attribute.
+This package is well compatible with Livewire component and directly bind to wire:model attribute. To be able to livewire component find the metafield attributes, you need to append the fields to model attributes.
 
 ```
+// Product.php
+use Drhtoo\MetaField\Models\Concerns\HasMeta;
+
+class Product extends Model
+{
+    use HasMeta;
+
+    protected $metaFields = [
+        'price' => null,
+        'is_sale' => false,
+        'sale_price' => null,
+        'color' => null,
+        'sale_start' => null,
+        'sale_end' => null,
+    ];
+
+    protected $appends = [
+        'price', 'is_sale', 'sale_price', 'color', 'sale_start', 'sale_end'
+    ];
+}
+
+// Livewire component blade view
 <input type="number" wire:model="product.price" />
 @error('product.price')
 <span class="error">{{ $message }}</span>
@@ -116,6 +142,7 @@ This package is well compatible with Livewire component and directly bind to wir
 Laravel Meta Field works well with spatie/laravel-translatable package and you just simply add array item of meta field to ***$translatable*** property of your model and use ***setAttribute*** method of ***HasMeta*** trait insteadof ***Translatable***.
 
 ```
+// Product.php
 use Drhtoo\MetaField\Models\Concerns\HasMeta;
 
 class Product extends Model
