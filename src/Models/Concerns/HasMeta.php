@@ -29,7 +29,7 @@ trait HasMeta
 
         static::deleting(function ($model) {
             foreach ($model->metas as $meta) {
-                $mete->delete();
+                $meta->delete();
             }
         });
     }
