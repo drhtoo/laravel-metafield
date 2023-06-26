@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Drhtoo\MetaField\Models\Concerns;
 
@@ -17,18 +17,24 @@ trait HasMeta
 
     public static function bootHasMeta()
     {
-        static::saved (function ($model) {
+        static::saved(function ($model) {
             foreach ($model->metas as $meta) {
-                if(array_key_exists($meta->key, $model->metasForDeletion)) {
+                if (array_key_exists($meta->key, $model->metasForDeletion)) {
                     $meta->delete();
                 } else {
                     $model->metas()->save($meta);
                 }
             }
         });
+
+        static::deleting(function ($model) {
+            foreach ($model->metas as $meta) {
+                $mete->delete();
+            }
+        });
     }
 
-    public function saveMeta($key = null, $value = null) 
+    public function saveMeta($key = null, $value = null)
     {
         if ($key === null) {
             foreach ($this->metas as $meta) {
@@ -50,7 +56,7 @@ trait HasMeta
         return $this->saveOneMeta($key, $value);
     }
 
-    protected function saveOneMeta ($key, $value) 
+    protected function saveOneMeta($key, $value)
     {
         $meta = $this->metas()->firstOrNew(['key' => $key]);
 
@@ -94,17 +100,17 @@ trait HasMeta
     {
         if ($this->isMetaAttribute($key)) {
             $value = $this->getMetaAttribute($key);
-        
+
             if (in_array(HasTranslations::class, class_uses_recursive($this)) && $this->isTranslatableAttribute($key)) {
-                
+
                 $normalizedLocale = $this->normalizeLocale($key, $locale = $this->getLocale(), true);
 
                 $isKeyMissingFromLocale = ($locale !== $normalizedLocale);
-                
+
                 $translation = $value[$normalizedLocale] ?? '';
-        
+
                 $translatableConfig = app(Translatable::class);
-        
+
                 if ($isKeyMissingFromLocale && $translatableConfig->missingKeyCallback) {
                     try {
                         $callbackReturnValue = (app(Translatable::class)->missingKeyCallback)($this, $key, $locale, $translation, $normalizedLocale);
@@ -115,11 +121,11 @@ trait HasMeta
                         //prevent the fallback to crash
                     }
                 }
-        
+
                 if ($this->hasGetMutator($key)) {
                     return $this->mutateAttribute($key, $translation);
                 }
-        
+
                 return $translation;
             }
 
@@ -132,25 +138,24 @@ trait HasMeta
     public function getMetaAttribute($key)
     {
         $metaFields = $this->getMetaFields();
-            
-        $value = method_exists($this, $getter = 'get'.Str::studly($key).'Attribute') 
-                ? $this->{$getter}() 
-                : $this->metas->{$key} ?? $metaFields[$key];
+
+        $value = method_exists($this, $getter = 'get' . Str::studly($key) . 'Attribute')
+            ? $this->{$getter}()
+            : $this->metas->{$key} ?? $metaFields[$key];
 
         if ($value && $this->hasCast($key)) {
             $value = $this->castAttribute($key, $value);
         }
 
         return $value;
-
     }
 
-    public function setAttribute($key, $value) 
+    public function setAttribute($key, $value)
     {
         if ($this->isMetaAttribute($key)) {
             if (in_array(HasTranslations::class, class_uses_recursive($this)) && $this->isTranslatableAttribute($key)) {
-                if (is_array($value)) { 
-                    foreach($value as $locale => $translation) {
+                if (is_array($value)) {
+                    foreach ($value as $locale => $translation) {
                         $this->setMetaTranslation($key, $locale, $translation);
                     }
                     return $this;
@@ -176,23 +181,22 @@ trait HasMeta
     public function setMetaAttribute($key, $value)
     {
         $metaFields = $this->getMetaFields();
-        
+
         if ($value === $metaFields[$key]) {
             $this->metasForDeletion[$key] = $value;
         } elseif (isset($this->metasForDeletion[$key]) && $value !== $this->metasForDeletion[$key]) {
             unset($this->metasForDeletion[$key]);
         }
 
-        if (method_exists($this, $setter = 'set'.Str::studly($key).'Attribute')) {
+        if (method_exists($this, $setter = 'set' . Str::studly($key) . 'Attribute')) {
             return $this->{$setter}($value);
         }
 
-        if (! is_null($value) && $this->isJsonCastable($key)) {
+        if (!is_null($value) && $this->isJsonCastable($key)) {
             $value = $this->castAttributeAsJson($key, $value);
         }
-        
-        return $this->metas->{$key} = $value;
 
+        return $this->metas->{$key} = $value;
     }
 
     public function mutateAttribute($key, $value)
@@ -206,7 +210,7 @@ trait HasMeta
         return $this->getAttribute($key);
     }
 
-    public function setMetaTranslation(string $key, string $locale, $value) : self
+    public function setMetaTranslation(string $key, string $locale, $value): self
     {
         $this->guardAgainstNonTranslatableAttribute($key);
 
@@ -215,7 +219,7 @@ trait HasMeta
         $oldValue = $translations[$locale] ?? '';
 
         if ($this->hasSetMutator($key)) {
-            $method = 'set'.Str::studly($key).'Attribute';
+            $method = 'set' . Str::studly($key) . 'Attribute';
 
             $this->{$method}($value, $locale);
 
@@ -241,7 +245,7 @@ trait HasMeta
         return property_exists($this, 'metaFields') ? $this->metaFields : [];
     }
 
-    public function metas () : MorphMany
+    public function metas(): MorphMany
     {
         return $this->morphMany(Meta::class, 'object', 'object_type', 'object_id');
     }
@@ -260,7 +264,7 @@ trait HasMeta
 
                 $query->where('key', $operator, $key);
 
-                return is_null($value) ? $query : 
+                return is_null($value) ? $query :
                     $query->where('value', $operator, $value);
             });
         }
